@@ -17,6 +17,9 @@ export const Contact = () => {
 
   const [previews, setPreviews] = useState<string[]>([]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ success?: boolean; message?: string }>({});
+
   useEffect(() => {
     // Load 3D preview if exists
     const storedPreview = sessionStorage.getItem('tattoo_preview');
@@ -45,10 +48,33 @@ export const Contact = () => {
     setPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const sendToWhatsApp = () => {
-    const message = `SOLICITUD ARTININK\n\nNombre: ${formData.name}\nWhatsApp: ${formData.whatsapp}\nUbicación: ${formData.placement}\nTamaño: ${formData.size}\nIdea: ${formData.idea}\n\n*Nota: He adjuntado ${previews.length} imágenes de referencia.*`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${STUDIO_DATA.whatsapp}?text=${encodedMessage}`, '_blank');
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitStatus({});
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          previews: previews,
+        }),
+      });
+
+      const result = await response.json();
+      setSubmitStatus({ success: result.success, message: result.message });
+      
+      if (result.success) {
+        // Opcionalmente limpiar formulario
+        setFormData({ name: '', whatsapp: '', idea: '', placement: '', size: '' });
+        setPreviews([]);
+      }
+    } catch (error) {
+      setSubmitStatus({ success: false, message: "Error de conexión con el servidor." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -67,6 +93,13 @@ export const Contact = () => {
               animate={{ opacity: 1, x: 0 }}
               className="space-y-16"
             >
+              {/* Status Message */}
+              {submitStatus.message && (
+                <div className={`p-6 border ${submitStatus.success ? 'border-green-500 text-green-500' : 'border-ink-red text-ink-red'} text-[10px] uppercase font-bold tracking-widest`}>
+                  {submitStatus.message}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="space-y-4">
                   <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Identidad</label>
@@ -152,36 +185,36 @@ export const Contact = () => {
               </div>
 
               <button 
-                onClick={sendToWhatsApp}
-                className="w-full flex items-center justify-center gap-4 py-8 bg-white text-ink-black uppercase tracking-[0.2em] font-bold hover:bg-ink-red hover:text-white transition-all shadow-2xl"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`w-full flex items-center justify-center gap-4 py-8 bg-white text-ink-black uppercase tracking-[0.2em] font-bold hover:bg-ink-red hover:text-white transition-all shadow-2xl ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                <Send className="w-5 h-5" />
-                Enviar Solicitud vía WhatsApp
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-ink-black border-t-transparent animate-spin rounded-full"></div>
+                    Procesando...
+                  </span>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Enviar Solicitud
+                  </>
+                )}
               </button>
             </motion.div>
 
             {/* Info Side */}
             <div className="space-y-24">
               <div className="h-[500px] border border-white/5 grayscale invert contrast-125 relative overflow-hidden">
-                {!GOOGLE_MAPS_API_KEY ? (
-                  <div className="w-full h-full bg-ink-charcoal flex items-center justify-center p-8 text-center">
-                    <p className="text-[10px] uppercase tracking-widest text-white/40">Llave de Google Maps requerida para visualización cartográfica</p>
-                  </div>
-                ) : (
-                  <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
-                    <Map
-                      defaultCenter={STUDIO_DATA.coords}
-                      defaultZoom={15}
-                      mapId="ARTININK_MAP"
-                      internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
-                      style={{ width: '100%', height: '100%' }}
-                    >
-                      <AdvancedMarker position={STUDIO_DATA.coords}>
-                        <Pin background="#E11D48" glyphColor="#fff" />
-                      </AdvancedMarker>
-                    </Map>
-                  </APIProvider>
-                )}
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.4740430766365!2d-74.10795302412473!3d4.6873751952876255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b41e2687105%3A0x31ed91691a9f8a2d!2zQ3JhLiA4MCAjIDY3LTIwLCBFbmdhdGl2w6EsIEJvZ290w6EsIEQuQy4sIEJvZ290w6EsIEJvZ290w6EsIEQuQy4!5e0!3m2!1ses-419!2sco!4v1778620960475!5m2!1ses-419!2sco" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
                 <div className="absolute inset-0 pointer-events-none border-[20px] border-ink-black" />
               </div>
 
@@ -211,6 +244,7 @@ export const Contact = () => {
 
               <div className="pt-24 border-t border-white/5 opacity-20">
                 <p className="text-[10px] uppercase tracking-[0.8em] font-bold">PROTOCOLO DE SEGURIDAD ACTIVADO</p>
+                <p className="text-[8px] uppercase tracking-[0.2em] font-bold mt-2">NOTA: Adjunta tus fotos manualmente en WhatsApp después de enviar el mensaje.</p>
               </div>
             </div>
           </div>

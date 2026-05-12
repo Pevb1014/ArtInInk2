@@ -1,3 +1,14 @@
+/** 
+ * INSTRUCCIONES DE PERSONALIZACIÓN:
+ * ---------------------------------
+ * 1. Para usar imágenes propias:
+ *    - Colócalas en la carpeta 'public/images/'
+ *    - Cambia las URLs abajo por '/images/tu_archivo.jpg'
+ * 2. Para imágenes de Instagram:
+ *    - Instagram no permite enlaces directos fácilmente. 
+ *    - Descarga tus fotos y súbelas a la carpeta 'public/images/'
+ */
+
 export const STUDIO_DATA = {
   name: "ArtInInk Studio",
   address: "Carrera 80 #67-20, Bogotá, Colombia",
