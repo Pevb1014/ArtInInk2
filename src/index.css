@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Geist:wght@100..900&display=swap');
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-serif: "Bodoni Moda", serif;
+  --font-sans: "Geist", sans-serif;
+
+  --color-ink-black: #000000;
+  --color-ink-charcoal: #121414;
+  --color-ink-silver: #c6c6c6;
+  --color-ink-red: #ffb4a8;
+  --color-ink-red-dark: #930000;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+@layer base {
+  body {
+    @apply bg-ink-black text-ink-silver font-sans selection:bg-ink-red selection:text-ink-black;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    @apply font-serif;
+  }
+}
+
+.ink-gradient {
+  background: linear-gradient(to bottom, rgba(18, 20, 20, 0.4), rgba(18, 20, 20, 1));
+}
+
+.leaflet-container {
+  filter: grayscale(1) invert(1) contrast(1.2);
+}
