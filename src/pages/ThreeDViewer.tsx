@@ -62,7 +62,7 @@ const ModelManager = ({
   tattooRotation, 
   onPointSelection 
 }: any) => {
-  const modelPath = gender === 'male' ? '/models/male.glb' : '/models/female.glb';
+  const modelPath = gender === 'male' ? 'models/male.glb' : 'models/female.glb';
   const { scene } = useGLTF(modelPath);
   
   // Estado para la malla seleccionada y datos locales
@@ -151,8 +151,8 @@ const ModelManager = ({
 };
 
 // Cargar modelos fuera del ciclo de renderizado
-useGLTF.preload('/models/male.glb');
-useGLTF.preload('/models/female.glb');
+useGLTF.preload('models/male.glb');
+useGLTF.preload('models/female.glb');
 
 // Fallback preventivo
 const CapsuleModel = ({ gender, tattooUrl, tattooScale, tattooOpacity, tattooRotation, onPointSelection }: any) => {
