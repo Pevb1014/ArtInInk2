@@ -1,0 +1,2 @@
+# Colecciona aquí tus imágenes de tatuajes y del estudio
+# Ejemplo: /public/images/tattoo1.jpg

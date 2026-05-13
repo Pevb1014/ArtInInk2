@@ -18,18 +18,21 @@ async function startServer() {
     const { name, whatsapp, idea, placement, size, previews } = req.body;
 
     try {
-      // Configuración de Nodemailer (Placeholder o real si hay variables de env)
+      // Configuración de Nodemailer
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.EMAIL_USER || 'placeholder@gmail.com', // El usuario debe configurar esto
-          pass: process.env.EMAIL_PASS || 'password', // Clave de aplicación
+          user: process.env.EMAIL_USER || 'placeholder@gmail.com',
+          pass: process.env.EMAIL_PASS || 'password',
         },
       });
+
+      const recipientEmail = process.env.TATTOO_EMAIL || 'pevb97@gmail.com';
 
       // Si no hay configuración real, simulamos éxito para el demo
       if (!process.env.EMAIL_USER) {
           console.log("--- SIMULACIÓN DE ENVÍO DE EMAIL ---");
+          console.log(`Para: ${recipientEmail}`);
           console.log(`De: ${name} (${whatsapp})`);
           console.log(`Ubicación: ${placement} | Tamaño: ${size}`);
           console.log(`Idea: ${idea}`);
