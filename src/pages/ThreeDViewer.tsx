@@ -281,9 +281,9 @@ export const ThreeDViewer = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col lg:flex-row relative bg-ink-black overflow-hidden pt-20 lg:pt-0">
+    <div className="h-screen w-full flex flex-col-reverse lg:flex-row relative bg-ink-black overflow-hidden lg:pt-0">
       {/* UI Sidebar */}
-      <div className="w-full lg:w-[450px] h-full z-20 border-r border-white/5 bg-ink-black/40 backdrop-blur-3xl pt-16 lg:pt-32 px-8 overflow-y-auto">
+      <div className="w-full lg:w-[450px] h-[40vh] lg:h-full z-20 border-t lg:border-t-0 lg:border-r border-white/5 bg-ink-black/40 backdrop-blur-3xl pt-8 lg:pt-32 px-8 overflow-y-auto">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8 pb-24">
           <section>
             <p className="text-[10px] uppercase tracking-[0.5em] text-ink-red mb-4 font-bold">Simulación Avanzada</p>
@@ -384,7 +384,7 @@ export const ThreeDViewer = () => {
       </div>
 
       {/* 3D Scene */}
-      <div className="flex-1 h-full bg-ink-black relative">
+      <div className="flex-1 h-[60vh] lg:h-full bg-ink-black relative">
         <Suspense fallback={
           <div className="absolute inset-0 flex items-center justify-center bg-ink-black z-10">
             <div className="text-center">
