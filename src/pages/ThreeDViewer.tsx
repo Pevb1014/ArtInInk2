@@ -213,9 +213,9 @@ const SceneContent = ({
     <Suspense fallback={null}>
       <PerspectiveCamera makeDefault position={[0, 0, 10]} />
       <OrbitControls makeDefault enableZoom={true} minDistance={5} maxDistance={15} />
-      <ambientLight intensity={0.4} />
-      <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={2} />
-      <Environment preset="night" />
+      <ambientLight intensity={0.7} />
+      <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={3} />
+      <Environment preset="warehouse" />
       
       <ErrorBoundary fallback={<CapsuleModel gender={gender} tattooUrl={selectedTattoo} tattooScale={tattooScale} tattooOpacity={tattooOpacity} tattooRotation={tattooRotation} onPointSelection={onPointSelection} />}>
         <Suspense fallback={null}>
@@ -384,9 +384,9 @@ export const ThreeDViewer = () => {
       </div>
 
       {/* 3D Scene */}
-      <div className="flex-1 h-[60vh] lg:h-full bg-ink-black relative">
+      <div className="flex-1 h-[60vh] lg:h-full bg-[#1a1a1a] relative">
         <Suspense fallback={
-          <div className="absolute inset-0 flex items-center justify-center bg-ink-black z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a] z-10">
             <div className="text-center">
               <div className="w-12 h-12 border-2 border-ink-red border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-white/40 text-[10px] uppercase tracking-widest">Cargando Simulación...</p>
@@ -409,7 +409,7 @@ export const ThreeDViewer = () => {
         
         <div className="absolute bottom-8 right-8 text-right pointer-events-none z-10">
           <p className="text-[10px] font-bold tracking-[0.4em] text-ink-red uppercase mb-2">Simulación en tiempo real</p>
-          <p className="text-[9px] font-bold tracking-[0.2em] text-white/20 uppercase whitespace-pre-line leading-relaxed">
+          <p className="text-[9px] font-bold tracking-[0.2em] text-white/40 uppercase whitespace-pre-line leading-relaxed">
             Arrastra para rotar la vista{"\n"}
             Haz clic para reposicionar
           </p>
