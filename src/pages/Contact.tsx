@@ -48,33 +48,24 @@ export const Contact = () => {
     setPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setIsSubmitting(true);
-    setSubmitStatus({});
+    
+    const message = `*Nueva Solicitud de Tatuaje*%0A%0A` +
+      `*Nombre:* ${formData.name}%0A` +
+      `*WhatsApp:* ${formData.whatsapp}%0A` +
+      `*Zona:* ${formData.placement}%0A` +
+      `*Tamaño:* ${formData.size}%0A` +
+      `*Idea:* ${formData.idea}%0A%0A` +
+      `_Nota: Por favor adjunta las imágenes de referencia y la captura de la simulación a continuación._`;
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          previews: previews,
-        }),
-      });
-
-      const result = await response.json();
-      setSubmitStatus({ success: result.success, message: result.message });
-      
-      if (result.success) {
-        // Opcionalmente limpiar formulario
-        setFormData({ name: '', whatsapp: '', idea: '', placement: '', size: '' });
-        setPreviews([]);
-      }
-    } catch (error) {
-      setSubmitStatus({ success: false, message: "Error de conexión con el servidor." });
-    } finally {
-      setIsSubmitting(false);
-    }
+    const whatsappUrl = `https://wa.me/${STUDIO_DATA.whatsapp}?text=${message}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    setIsSubmitting(false);
+    setSubmitStatus({ success: true, message: "Redirigiendo a WhatsApp..." });
   };
 
   return (
@@ -157,49 +148,36 @@ export const Contact = () => {
                 />
               </div>
 
-              <div className="space-y-6">
-                <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Referencias Visuales</label>
-                
-                {/* Preview Grid */}
-                {previews.length > 0 && (
-                  <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-8">
+              {previews.length > 0 && (
+                <div className="space-y-6">
+                  <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Referencias Visuales</label>
+                  
+                  {/* Preview Grid - Solo para la captura 3D si existe */}
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-4">
                     {previews.map((src, i) => (
-                      <div key={i} className="relative aspect-square border border-white/10 group">
-                        <img src={src} className="w-full h-full object-cover grayscale opacity-60" alt="Preview" />
-                        <button 
-                          onClick={() => removePreview(i)}
-                          className="absolute top-1 right-1 bg-ink-red p-1 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X size={12} className="text-white" />
-                        </button>
+                      <div key={i} className="relative aspect-square border border-white/10">
+                        <img src={src} className="w-full h-full object-cover grayscale opacity-60" alt="3D Preview" />
                       </div>
                     ))}
                   </div>
-                )}
 
-                <label className="border-2 border-dashed border-white/10 p-12 text-center group hover:border-ink-red transition-all cursor-pointer block">
-                  <Upload className="w-8 h-8 mx-auto mb-4 text-white/20 group-hover:text-ink-red transition-colors" />
-                  <p className="text-[10px] uppercase tracking-widest text-white/20">Sube imágenes de referencia</p>
-                  <input type="file" multiple className="hidden" onChange={handleFileChange} accept="image/*" />
-                </label>
-              </div>
+                  <div className="bg-ink-charcoal/30 border border-white/5 p-6 space-y-4">
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-white/40 leading-relaxed font-bold">
+                      * El sistema ha optimizado tu solicitud. No es necesario subir archivos aquí. 
+                      Al enviar la solicitud, se te dirigirá a WhatsApp donde podrás adjuntar tus referencias 
+                      manualmente para una atención personalizada.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <button 
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 className={`w-full flex items-center justify-center gap-4 py-8 bg-white text-ink-black uppercase tracking-[0.2em] font-bold hover:bg-ink-red hover:text-white transition-all shadow-2xl ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-ink-black border-t-transparent animate-spin rounded-full"></div>
-                    Procesando...
-                  </span>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Enviar Solicitud
-                  </>
-                )}
+                <Send className="w-5 h-5" />
+                Continuar a WhatsApp
               </button>
             </motion.div>
 

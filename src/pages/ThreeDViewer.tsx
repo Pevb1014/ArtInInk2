@@ -242,7 +242,7 @@ export const ThreeDViewer = () => {
   
   const [gender, setGender] = useState('male');
   const [selectedTattoo, setSelectedTattoo] = useState(TATTOO_FLASH[0]);
-  const [tattooScale, setTattooScale] = useState(1);
+  const [tattooScale, setTattooScale] = useState(0.1);
   const [tattooOpacity, setTattooOpacity] = useState(0.8);
   const [tattooRotation, setTattooRotation] = useState(0);
   const [tattooPos, setTattooPos] = useState<[number, number, number]>([0, 1.5, 3]);
@@ -269,6 +269,13 @@ export const ThreeDViewer = () => {
     if (canvas) {
       const dataUrl = canvas.toDataURL('image/png');
       sessionStorage.setItem('tattoo_preview', dataUrl);
+      
+      // Descarga automática de la captura
+      const link = document.createElement('a');
+      link.download = `tattoo-preview-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+      
       navigate('/contact');
     }
   };
@@ -371,7 +378,7 @@ export const ThreeDViewer = () => {
             className="w-full py-6 bg-white text-ink-black text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-ink-red hover:text-white transition-all shadow-xl"
           >
             <Camera size={16} />
-            Confirmar y Consultar
+            Capturar y Continuar
           </button>
         </motion.div>
       </div>
